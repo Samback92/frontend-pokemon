@@ -13,7 +13,6 @@ nav {
     padding: 10px;
     text-align: center;
     align-items: center;
-    max-width: 800px;
     min-width: 500px;
 }
 
@@ -32,9 +31,18 @@ nav {
     background-color: #908e8e;
 }
 
+div#pokemonList {
+    display: flex;
+    flex-direction: row-reverse;
+    align-content: stretch;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
 .button-container {
     display: flex;
     height: 40px;
+    justify-content: center;
     
 }
 

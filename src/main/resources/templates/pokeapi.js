@@ -1,4 +1,20 @@
 console.log("Hej");
+import { 
+    createPokedexButton, createPokemonButton,
+    getPokemonFromPokedex, deletePokemonFromPokedex
+} from './restapi.js';
+
+window.onload = function() {
+    const appDiv = document.getElementById('app');
+    const pokemonListDiv = document.createElement('div');
+    pokemonListDiv.id = 'pokemonList';
+    appDiv.appendChild(pokemonListDiv);
+
+    const pokedexDiv = document.createElement('div');
+    pokedexDiv.id = 'pokedex';
+    appDiv.appendChild(pokedexDiv);
+}
+
 class App {
     constructor() {
         this.apiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
@@ -38,20 +54,21 @@ class App {
         }
     }
 
-
-    displayData(pokemonList) {
+    displayData() {
         const appDiv = document.getElementById('app');
         appDiv.innerHTML = '';
 
-        // Lägg till Pokedex-knappen
-        const pokedexButton = document.createElement('button');
-        pokedexButton.textContent = this.isPokedexVisible ? 'Dölj Pokedex' : 'Visa Pokedex';
-        pokedexButton.onclick = () => {
-            this.isPokedexVisible = !this.isPokedexVisible;
-            pokedexButton.textContent = this.isPokedexVisible ? 'Dölj Pokedex' : 'Visa Pokedex';
-            // Här kan du lägga till kod för att visa eller dölja Pokedex
-        };
+        let pokemonListDiv = document.getElementById('pokemonList');
+        if (!pokemonListDiv) {
+            pokemonListDiv = document.createElement('div');
+            pokemonListDiv.id = 'pokemonList';
+            appDiv.appendChild(pokemonListDiv);
+        }
         
+
+        // Skapa Pokedex-knappen
+        const pokedexButton = createPokedexButton(this);
+
         // Skapa en div för knapparna
         const buttonDiv = document.createElement('div');
         buttonDiv.className = 'button-container';
@@ -77,57 +94,69 @@ class App {
             pokemonImage.onclick = () => this.showPokemonDetails(pokemon);
             pokemonDiv.append(pokemonName, pokemonImage);
             appDiv.appendChild(pokemonDiv);
+            pokemonListDiv.appendChild(pokemonDiv);
         });   
-
-
     }
 
-
+    async displayPokedex() {
+        let pokedexDiv = document.getElementById('pokedex');
+        if (!pokedexDiv) {
+            const appDiv = document.getElementById('app');
+            pokedexDiv = document.createElement('div');
+            pokedexDiv.id = 'pokedex';
+            appDiv.appendChild(pokedexDiv);
+        }
+        pokedexDiv.innerHTML = '';
+    
+        const pokedexPokemonList = await getPokemonFromPokedex();
+        pokedexPokemonList.forEach(pokemon => {
+            const pokedexPokemonName = document.createElement('p');
+            pokedexPokemonName.textContent = pokemon.name;
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Ta bort';
+            removeButton.onclick = () => deletePokemonFromPokedex(pokemon.id, this);
+            pokedexDiv.appendChild(pokedexPokemonName);
+            pokedexDiv.appendChild(removeButton);
+        });
+    }
+    
     showPokemonDetails(pokemon) {
         const appDiv = document.getElementById('app');
-        appDiv.innerHTML = ''; // Rensa tidigare data
-
+        appDiv.innerHTML = '';
+    
         const pokemonName = document.createElement('h1');
         const pokemonImage = document.createElement('img');
         const pokemonHeight = document.createElement('p');
         const pokemonWeight = document.createElement('p');
         const backButton = document.createElement('button');
-        const pokemonButton = document.createElement('button');
-
+    
         pokemonName.textContent = pokemon.name;
         pokemonImage.src = pokemon.image;
         pokemonHeight.textContent = "Höjd: " + pokemon.height;
         pokemonWeight.textContent = "Vikt: " + pokemon.weight;
-
-        pokemonButton.textContent = 'Spara i Pokedex';
+    
+        const pokemonButton = createPokemonButton(pokemon);
+    
         backButton.textContent = 'Tillbaka';
         backButton.onclick = () => {
-            this.togglePaginationButtons('block'); // Visa knapparna när du går tillbaka till listan
+            this.togglePaginationButtons('block'); 
             this.displayData();
         };
-
+    
         appDiv.append(pokemonName, pokemonButton, pokemonImage, pokemonHeight, pokemonWeight, backButton);
-
-        this.togglePaginationButtons('none'); // Dölj knapparna när detaljsidan visas
+    
+        this.togglePaginationButtons('none'); 
     }
-
 
     togglePaginationButtons(displayValue) {
         document.getElementById('prev').style.display = displayValue;
         document.getElementById('next').style.display = displayValue;
     }
 
-
-    saveData() {
-
-    }
-
-
     nextPage() {
         this.currentPage++;
         this.displayData();
     }
-
 
     prevPage() {
         if (this.currentPage > 1) {
