@@ -31,6 +31,7 @@ function fetchBasePokemon() {
                     if (currentPage > 0) {
                         currentPage--;
                         showPage(currentPage);
+                        pokemonHeader(); 
                     }
                 });
                 document.body.append(prevButton);
@@ -44,12 +45,13 @@ function fetchBasePokemon() {
                     if (currentPage < Math.ceil(allpokemon.results.length / pokemonsPerPage) - 1) {
                         currentPage++;
                         showPage(currentPage);
+                        pokemonHeader(); 
                     }
                 });
                 document.body.append(nextButton);
             }       
         }
-        showPage(0);
+        showPage(currentPage);
         pokemonHeader(); 
     })
 }
@@ -113,13 +115,12 @@ function fetchPokemonData(pokemon) {
     let url = pokemon.url;
         
     fetch(url)
-        .then(response => response.json())
-        .then(function (pokeData) {
-            console.log(pokeData);
-            renderPokemon(pokeData); 
-        });
+    .then(response => response.json())
+    .then(function (pokeData) {
+        console.log(pokeData);
+        renderPokemon(pokeData); 
+    });
 }
-        
 
 function createTypes(types, ul){
     types.forEach(function(type){
@@ -129,8 +130,6 @@ function createTypes(types, ul){
         ul.append(typeLi)
     });
 }
-
-  
 
 function printPokemonInfo(pokeData) {
     let pokemonBox = document.getElementById("pokemon-container");
@@ -200,38 +199,38 @@ function printPokemonInfo(pokeData) {
 function catchPokemon(pokeData) {
     
     fetch('http://localhost:8080/caught-pokemon-ids')
-        .then(response => response.json())
-        .then(function(caughtPokemonIds) {
+    .then(response => response.json())
+    .then(function(caughtPokemonIds) {
             
-            if (caughtPokemonIds.includes(pokeData.id)) {
-                displayMessage(`Du har redan fångat en ${pokeData.name}!`);
-                console.error(`Pokemon with ID ${pokeData.id} is already caught.`);
-            } else {
+        if (caughtPokemonIds.includes(pokeData.id)) {
+            displayMessage(`Du har redan fångat en ${pokeData.name}!`);
+            console.error(`Pokemon with ID ${pokeData.id} is already caught.`);
+        } else {
                 
-                let caughtPokemon = {
-                    id: pokeData.id,
-                    name: pokeData.name,
-                    type: pokeData.types.map(type => type.type.name),
-                    caught: true
-                };
+        let caughtPokemon = {
+            id: pokeData.id,
+            name: pokeData.name,
+            type: pokeData.types.map(type => type.type.name),
+            caught: true
+        };
 
                 
-                fetch('http://localhost:8080/pokemon', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(caughtPokemon), 
-                })
-                .then(response => response.json())
-                .then(data => {
-                    displayMessage(`Du fångade ${pokeData.name}!`);
-                    console.log('Pokemon caught and saved:', data);
-                })
-                .catch(error => console.error('Error catching Pokemon:', error));
-            }
+        fetch('http://localhost:8080/pokemon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(caughtPokemon), 
         })
-        .catch(error => console.error('Error fetching caught Pokemon IDs:', error));
+        .then(response => response.json())
+        .then(data => {
+            displayMessage(`Du fångade ${pokeData.name}!`);
+            console.log('Pokemon caught and saved:', data);
+        })
+            .catch(error => console.error('Error catching Pokemon:', error));
+        }
+    })
+    .catch(error => console.error('Error fetching caught Pokemon IDs:', error));
 }
 
 function fetchCaughtPokemons() {
@@ -304,7 +303,7 @@ function renderCaughtPokemons(caughtPokemons) {
 }
 
 function deletePokemon(pokemonId) {
-    console.log(`Deleting Pokemon with ID: ${pokemonId}`);
+    console.log(`Ta bort Pokemon med ID: ${pokemonId}`);
     fetch(`http://localhost:8080/pokemon?id=${pokemonId}`, {
     method: 'DELETE',
     })
