@@ -1,23 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Min Frontend Applikation</title>
-    <script type="module" src="pokeapi.js" defer></script>
-    <script type="module" src="restapi.js" defer></script>
+    <script type="module" src="script.js" defer></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div id="loading">Laddar...
-    </div>
-    <nav>
-        <div id="pagination">
-            <button id="prev">Föregående</button>
-            <button id="next">Nästa</button>
-        </div>
-        <div id="app">
-        </div>
-    </nav>
+    <div id="pokemon-container"></div>
+    <div id="pokemonInfoContainer"></div>
 </body>
 </html>

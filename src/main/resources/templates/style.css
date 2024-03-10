@@ -7,51 +7,50 @@ body {
     box-sizing: border-box;
 }
 
-nav {
-    background-color: #333;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    align-items: center;
-    min-width: 500px;
+#pokemon-container {
+    max-width: 1250px;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    flex-direction: row;
+    align-items: baseline;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+
 }
 
-#pagination {
-    display: flex;
-    justify-content: center;
-}
-
-#pagination button {
+#prevButton {
     margin: 10px;
     padding: 10px;
     cursor: pointer;
 }
 
-#pagination button:hover {
-    background-color: #908e8e;
-}
 
-div#pokemonList {
-    display: flex;
-    flex-direction: row-reverse;
-    align-content: stretch;
-    justify-content: space-evenly;
-    align-items: flex-end;
-}
-
-.button-container {
-    display: flex;
-    height: 40px;
-    justify-content: center;
-    
-}
-
-.pokedexBtn {
+#nextButton {
     margin: 10px;
     padding: 10px;
     cursor: pointer;
 }
 
-#pokedexBtn:hover {
-    background-color: #908e8e;
+.catchBtn {
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.homeBtn {
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.showMyPokemonBtn {
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.showMyPokemonBtn:hover {
+    background-color: #968f8f;
 }
